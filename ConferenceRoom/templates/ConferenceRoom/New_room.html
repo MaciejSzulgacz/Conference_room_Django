@@ -5,6 +5,9 @@
     <title>New room</title>
 </head>
 <body>
+    {% if message %}
+        {{ message }}
+    {% endif %}
     <br>
     <form action="" method="post">
         {% csrf_token %}

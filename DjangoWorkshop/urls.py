@@ -19,6 +19,6 @@ from ConferenceRoom.views import Base, NewRoomView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('base/', Base.as_view()),
+    path('base/', BaseView.as_view()),
     path('room/new/', NewRoomView.as_view()),
 ]
