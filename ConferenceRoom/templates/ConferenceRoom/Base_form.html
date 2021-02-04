@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Conference Rooms</title>
+</head>
+<body>
+    <form action="/" method="post">
+        {% csrf_token %}
+        <button type="button">
+            <a href="http://localhost:8000/room/new/">Add conference room</a>
+        </button>
+    </form>
+</body>
+</html>
