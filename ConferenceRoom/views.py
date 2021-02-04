@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from .models import Rooms
 from django.views import View
 
@@ -33,4 +33,4 @@ class NewRoomView(View):
         if all([name, capacity, projector]):
             Rooms.objects.create(name=name, capacity=capacity, projector=projector)
         context = {'message': message}
-        return render(request, self.template_name, context)
+        return redirect('/base/')
