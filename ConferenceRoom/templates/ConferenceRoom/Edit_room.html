@@ -2,20 +2,16 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>New room</title>
+    <title>Edit room</title>
 </head>
 <body>
-    {% if message %}
-        {{ message }}
-    {% endif %}
-    <br>
     <form action="" method="post">
         {% csrf_token %}
-        <label>Conference room name:</label>
+        <label>New conference room name:</label>
         <input type="text" name="name"><br>
-        <label>Capacity:</label>
+        <label>New capacity:</label>
         <input type="text" name="capacity"><br>
-        <label>Projector:</label>
+        <label>New projector:</label>
         <input type="checkbox" name="projector" value="True"> <label>True</label>
         <input type="checkbox" name="projector" value="False"> <label>False</label><br>
         <input type="submit" name="submit" value="Send"><br><br>
