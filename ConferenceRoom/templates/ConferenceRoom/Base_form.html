@@ -5,11 +5,17 @@
     <title>Conference Rooms</title>
 </head>
 <body>
+    Title: Conference room booking<br><br>
     <form action="/" method="post">
         {% csrf_token %}
         <button type="button">
-            <a href="http://localhost:8000/room/new/">Add conference room</a>
+            <a href="http://localhost:8000/room/new/">Add conference room</a><br>
         </button>
+        <button type="button">
+        <a href="http://localhost:8000/list-of-rooms/">List of conference room</a><br>
+        </button>
+        <br><br>
+        Author: Maciej Szulgacz
     </form>
 </body>
 </html>

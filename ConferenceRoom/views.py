@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Rooms
+from .models import Rooms, Booking
 from django.views import View
+import datetime
 
 
 class BaseView(View):
@@ -34,7 +35,7 @@ class NewRoomView(View):
             return render(request, self.template_name, {'message': message})
         if all([name, capacity, projector]):
             Rooms.objects.create(name=name, capacity=capacity, projector=projector)
-        return redirect('/base/')
+        return redirect('/list-of-rooms/')
 
 
 class DeleteRoomView(View):
@@ -42,7 +43,7 @@ class DeleteRoomView(View):
     def get(self, request, my_id, *args, **kwargs):
         room = Rooms.objects.get(id=my_id)
         room.delete()
-        return redirect('/base/')
+        return redirect('/list-of-rooms/')
 
 
 class EditRoomView(View):
@@ -70,4 +71,58 @@ class EditRoomView(View):
             room.capacity = capacity
             room.projector = projector
             room.save()
-        return redirect('/base/')
+        return redirect('/list-of-rooms/')
+
+
+class ReserveRoomView(View):
+    template_name = 'ConferenceRoom/Reserve_room.html'
+
+    def get(self, request, my_id, *args, **kwargs):
+        reservations = Booking.objects.filter(rooms=my_id).order_by('date')
+        context = {'reservations': reservations}
+        return render(request, self.template_name, context)
+
+    def post(self, request, my_id, *args, **kwargs):
+        my_room = Rooms.objects.get(id=my_id)
+        my_date = request.POST.get('date')
+        comment = request.POST.get('comment')
+        if Booking.objects.filter(id=my_id, date=my_date):
+            message = "Room is already booked."
+            return render(request, self.template_name, {'message': message})
+        print(my_date)
+        print(datetime.date.today())
+        if my_date < str(datetime.date.today()):
+            message = "Choose future date."
+            return render(request, self.template_name, {'message': message})
+        Booking.objects.create(date=my_date, rooms=my_room, comment=comment)
+        return redirect('/list-of-rooms/')
+
+
+class DetailsRoomView(View):
+    template_name = 'ConferenceRoom/Details_room.html'
+
+    def get(self, request, my_id, *args, **kwargs):
+        my_room = Rooms.objects.get(id=my_id)
+        reservations = Booking.objects.filter(rooms=my_id).order_by('date')
+        context = {'name': my_room.name,
+                   'capacity': my_room.capacity,
+                   'projector': my_room.projector,
+                   'reservations': reservations,
+                   'my_id': my_id,
+                   }
+        return render(request, self.template_name, context)
+
+
+class ListOfRoomsView(View):
+    template_name = 'ConferenceRoom/List_of_rooms.html'
+
+    def get(self, request, *args, **kwargs):
+        my_rooms = Rooms.objects.all()
+        if not my_rooms:
+            message = "There is no available room."
+            return render(request, self.template_name, {'message': message})
+        for room in my_rooms:
+            reservation_dates = [reservation.date for reservation in room.booking_set.all()]
+            room.reserved = datetime.date.today() in reservation_dates
+        context = {'my_rooms': my_rooms}
+        return render(request, self.template_name, context)

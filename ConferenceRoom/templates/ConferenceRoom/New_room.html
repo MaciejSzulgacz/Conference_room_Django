@@ -8,7 +8,6 @@
     {% if message %}
         {{ message }}
     {% endif %}
-    <br>
     <form action="" method="post">
         {% csrf_token %}
         <label>Conference room name:</label>
@@ -20,7 +19,7 @@
         <input type="checkbox" name="projector" value="False"> <label>False</label><br>
         <input type="submit" name="submit" value="Send"><br><br>
         <button type="button">
-            <a href="http://localhost:8000/base/">Maine page</a>
+        <a href="http://localhost:8000/list-of-rooms/">List of conference room</a><br>
         </button>
     </form>
 </body>

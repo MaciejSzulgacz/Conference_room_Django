@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>List of rooms</title>
+</head>
+<body>
+    {% for room in my_rooms %}
+        Name: <a href="http://127.0.0.1:8000/room/details/{{ room.id }}">{{ room.name }}</a>
+        <button type="button">
+        <a href="http://localhost:8000/room/modify/{{ room.id }}/">Modify conference Room</a>
+        </button>
+        <button type="button">
+        <a href="http://localhost:8000/room/delete/{{ room.id }}/">Delete conference Room</a>
+        </button>
+        <button type="button">
+        <a href="http://localhost:8000/room/reserve/{{ room.id }}/">Book conference Room</a>
+        </button>
+        <br>
+        Capacity: {{ room.capacity }} <br>
+        Projector: {{ room.projector }} <br>
+        {% if room.reserved %}
+            Zarezerwowana
+        {% else %}
+            Dostępna
+        {% endif %}
+        <br>
+    {% endfor %}
+    <button type="button">
+    <a href="http://localhost:8000/base/">Main Page</a>
+    </button>
+    <button type="button">
+    <a href="http://localhost:8000/room/new/">Add conference room</a><br>
+    </button>
+</body>
+</html>

@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Details room</title>
+</head>
+<body>
+        Name: {{ name }} <br>
+        Capacity: {{ capacity }} <br>
+        Projector: {{ projector }} <br><br>
+
+        {% for res in reservations %}
+            Date: {{ res.date }} <br>
+            Comment: {{ res.comment }} <br><br>
+        {% endfor %}
+        <button type="button">
+        <a href="http://localhost:8000/room/modify/{{ my_id }}">Modify conference Room</a>
+        </button>
+        <button type="button">
+        <a href="http://localhost:8000/room/delete/{{ my_id }}">Delete conference Room</a>
+        </button>
+        <button type="button">
+        <a href="http://localhost:8000/room/reserve/{{ my_id }}">Book conference Room</a>
+        </button>
+        <button type="button">
+        <a href="http://localhost:8000/list-of-rooms/">List of conference room</a><br>
+        </button>
+</body>
+</html>
