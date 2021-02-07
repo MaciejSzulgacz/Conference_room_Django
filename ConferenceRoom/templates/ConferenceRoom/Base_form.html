@@ -6,16 +6,34 @@
 </head>
 <body>
     Title: Conference room booking<br><br>
-    <form action="/" method="post">
+    {% if message %}
+        {{ message }}<br><br>
+    {% endif %}
+    <form action="" method="post">
         {% csrf_token %}
-        <button type="button">
-            <a href="http://localhost:8000/room/new/">Add conference room</a><br>
-        </button>
-        <button type="button">
-        <a href="http://localhost:8000/list-of-rooms/">List of conference room</a><br>
-        </button>
-        <br><br>
-        Author: Maciej Szulgacz
+        Search room:<br>
+        Name: <input type="text" name="name"><br>
+        Min. capacity: <input type="number" name="capacity"><br>
+        Projector:
+        <input type="checkbox" name="projector" value="True"> <label>True</label>
+        <input type="checkbox" name="projector" value="False"> <label>False</label><br>
+        <input type="submit" name="submit" value="Search"><br><br>
     </form>
+    {% if my_rooms %}
+        {% for room in my_rooms %}
+            Name: <a href="http://127.0.0.1:8000/room/details/{{ room.id }}">{{ room.name }}</a><br>
+            Capacity: {{ room.capacity }} <br>
+            Projector: {{ room.projector }} <br>
+            <br>
+        {% endfor %}
+    {% endif %}
+    <button type="button">
+    <a href="http://localhost:8000/room/new/">Add conference room</a><br>
+    </button>
+    <button type="button">
+    <a href="http://localhost:8000/list-of-rooms/">List of conference room</a><br>
+    </button>
+    <br><br>
+    Author: Maciej Szulgacz
 </body>
 </html>

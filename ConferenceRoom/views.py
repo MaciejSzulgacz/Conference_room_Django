@@ -1,3 +1,4 @@
+from django.db import IntegrityError
 from django.shortcuts import render, redirect
 from .models import Rooms, Booking
 from django.views import View
@@ -11,7 +12,38 @@ class BaseView(View):
         return render(request, self.template_name)
 
     def post(self, request, *args, **kwargs):
-        return render(request, self.template_name)
+        name = request.POST.get('name')
+        capacity = request.POST.get('capacity')
+        if capacity:
+            capacity = int(capacity)
+            if capacity < 1:
+                message = "Capacity should be more than zero."
+                return render(request, self.template_name, {'message': message})
+        projector = request.POST.get('projector')
+        if name:
+            if capacity:
+                if projector:
+                    my_rooms = Rooms.objects.filter(name=name, capacity__gte=capacity, projector=projector)
+                else:
+                    my_rooms = Rooms.objects.filter(name=name, capacity__gte=capacity)
+            elif projector:
+                my_rooms = Rooms.objects.filter(name=name, projector=projector)
+            else:
+                my_rooms = Rooms.objects.filter(name=name)
+        elif capacity:
+            if projector:
+                my_rooms = Rooms.objects.filter(capacity__gte=capacity, projector=projector)
+            else:
+                my_rooms = Rooms.objects.filter(capacity__gte=capacity)
+        elif projector:
+            my_rooms = Rooms.objects.filter(projector=projector)
+        else:
+            message = "Fill in at least one field."
+            return render(request, self.template_name, {'message': message})
+        if not my_rooms:
+            message = "No conference room with such parameters."
+            return render(request, self.template_name, {'message': message})
+        return render(request, self.template_name, {'my_rooms': my_rooms})
 
 
 class NewRoomView(View):
@@ -59,8 +91,8 @@ class EditRoomView(View):
         if not name:
             message = "Enter the name."
             return render(request, self.template_name, {'message': message})
-        if not Rooms.objects.filter(id=my_id):
-            message = "Room does not exist."
+        if Rooms.objects.filter(name=name):
+            message = "Room already exist."
             return render(request, self.template_name, {'message': message})
         if not capacity > 0:
             message = "Capacity should be more than zero."
@@ -71,6 +103,9 @@ class EditRoomView(View):
             room.capacity = capacity
             room.projector = projector
             room.save()
+        else:
+            message = "Enter all fields."
+            return render(request, self.template_name, {'message': message})
         return redirect('/list-of-rooms/')
 
 
@@ -89,12 +124,15 @@ class ReserveRoomView(View):
         if Booking.objects.filter(id=my_id, date=my_date):
             message = "Room is already booked."
             return render(request, self.template_name, {'message': message})
-        print(my_date)
-        print(datetime.date.today())
         if my_date < str(datetime.date.today()):
             message = "Choose future date."
+            reservations = Booking.objects.filter(rooms=my_id).order_by('date')
+            return render(request, self.template_name, {'message': message, 'reservations': reservations})
+        try:
+            Booking.objects.create(date=my_date, rooms=my_room, comment=comment)
+        except IntegrityError:
+            message = "Room on this day is already booked."
             return render(request, self.template_name, {'message': message})
-        Booking.objects.create(date=my_date, rooms=my_room, comment=comment)
         return redirect('/list-of-rooms/')
 
 

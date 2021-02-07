@@ -20,9 +20,9 @@
         Capacity: {{ room.capacity }} <br>
         Projector: {{ room.projector }} <br>
         {% if room.reserved %}
-            Zarezerwowana
+            Booked
         {% else %}
-            Dostępna
+            Available
         {% endif %}
         <br>
     {% endfor %}

@@ -5,6 +5,9 @@
     <title>Edit room</title>
 </head>
 <body>
+    {% if message %}
+        {{ message }}
+    {% endif %}
     <form action="" method="post">
         {% csrf_token %}
         <label>New conference room name:</label>
