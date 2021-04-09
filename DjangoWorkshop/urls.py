@@ -20,7 +20,7 @@ from ConferenceRoom.views import BaseView, NewRoomView, DeleteRoomView, EditRoom
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('base/', BaseView.as_view()),
+    path('', BaseView.as_view()),
     path('room/new/', NewRoomView.as_view()),
     path('room/delete/<int:my_id>/', DeleteRoomView.as_view()),
     path('room/modify/<int:my_id>/', EditRoomView.as_view()),
