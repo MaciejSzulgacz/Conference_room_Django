@@ -23,7 +23,7 @@ Python 3.8.5, Django, Git, HTML
 * Checkout to venv:
 	`source ./venv/bin/activate`
 * Install requirements:
-	`pip install -r requirements`
+	`pip install -r requirements.txt`
 * Check requirements:
 	`pip list`
 
